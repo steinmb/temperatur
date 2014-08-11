@@ -33,25 +33,29 @@ function readSensors(array $streams) {
     }
     
     $fileName = 'temp.log';
-    $logString = ''; 
+    $logString = '';
+    $temps = '';
+    print (date('Y-m-d H:i:s') . "\n");
     foreach($streams as $stream) {
         $raw = '';
         $raw = stream_get_contents($stream, -1);
         $temp = strstr($raw, 't=');
         $temp = trim($temp, "t=");
         $temp = number_format($temp/1000, 3);
-        print "$temp ºC\n";
-        $logString .= $temp . ' '; 
+        print ($temp . "ºC\n");
+        if ($temps == '') {
+            $logString = date('Y-m-d H:i:s') . ', ';
+            $logString .= $temp;
+        }
+        else {
+            $logString .= ', ' . $temp . "\n";
+        }
         $temps[] = $temp;
     }
     print ("Avarage: " . array_sum($temps)/2 . "ºC \n");
     $logFile = fopen($fileName, 'a');
-    print("Logger: $logString \n");
     fwrite($logFile, $logString);
     fclose($logFile);
-
-    $temps = '';
-    $logs = '';
 }
 
 /**
@@ -68,7 +72,7 @@ function closeStreams(array $streams) {
 
 $end = FALSE;
 $endTime = strtotime("+24 hour");
-//$endTime = strtotime("+10 second");
+// $endTime = strtotime("+10 second");
 
 while (!$end) {
     $sensors = getSensors();
