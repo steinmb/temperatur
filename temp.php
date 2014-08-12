@@ -52,7 +52,7 @@ function readSensors(array $streams) {
         }
         $temps[] = $temp;
     }
-    print ("Avarage: " . array_sum($temps)/2 . "ºC \n");
+    print ("Average: " . array_sum($temps)/2 . "ºC \n");
     $logFile = fopen($fileName, 'a');
     fwrite($logFile, $logString);
     fclose($logFile);
