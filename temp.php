@@ -6,6 +6,8 @@
  */
 
 function getSensors() {
+    echo exec('sudo modprobe w1-gpio');
+    echo exec('sudo modprobe w1-therm');
     $baseDirectory = '/sys/bus/w1/devices';
     $content = dir($baseDirectory);
     while (false !== ($entry = $content->read())) {
@@ -71,7 +73,7 @@ function closeStreams(array $streams) {
 }
 
 $end = FALSE;
-$endTime = strtotime("+24 hour");
+$endTime = strtotime("+2 week");
 // $endTime = strtotime("+10 second");
 
 while (!$end) {
