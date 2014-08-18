@@ -34,6 +34,7 @@ function readSensors(array $streams) {
         return FALSE;
     }
     
+    $average = FALSE;
     $fileName = 'temp.log';
     $logString = '';
     $temps = '';
@@ -50,11 +51,14 @@ function readSensors(array $streams) {
             $logString .= $temp;
         }
         else {
+            $average = TRUE;
             $logString .= ', ' . $temp . "\n";
         }
         $temps[] = $temp;
     }
-    print ("Average: " . array_sum($temps)/2 . "ºC \n");
+    if ($average) {
+        print ("Average: " . array_sum($temps)/2 . "ºC \n");
+    }
     $logFile = fopen($fileName, 'a');
     fwrite($logFile, $logString);
     fclose($logFile);
