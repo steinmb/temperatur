@@ -88,7 +88,7 @@ while (!$end) {
     if (time() > $endTime) {
         $end = TRUE;
     }
-    sleep(1);
+    sleep(60);
 }
 
 if ($end) {
