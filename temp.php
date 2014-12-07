@@ -52,14 +52,14 @@ function readSensors(array $streams) {
         }
         else {
             $average = TRUE;
-            $logString .= ', ' . $temp . "\n";
+            $logString .= ', ' . $temp . "\r\n";
         }
         $temps[] = $temp;
     }
     if ($average) {
         print ("Average: " . array_sum($temps)/2 . "ºC \n");
     }
-    $logString .= "\n";
+    $logString .= "\r\n";
     $logFile = fopen($fileName, 'a');
     fwrite($logFile, $logString);
     fclose($logFile);
