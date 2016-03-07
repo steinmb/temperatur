@@ -52,7 +52,7 @@ function readSensors(array $streams) {
         }
         else {
             $average = TRUE;
-            $logString .= ', ' . $temp . "\r\n";
+            $logString .= ', ' . $temp;
         }
         $temps[] = $temp;
     }
