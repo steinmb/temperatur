@@ -11,7 +11,7 @@ import Adafruit_CharLCD as LCD
 # Initialize the LCD using the pins
 lcd = LCD.Adafruit_CharLCDPlate()
 
-log_file = '/home/pi/temperatur/temperatur/temp.log'
+log_file = '/home/pi/temperatur/temp.log'
 content_variable = open(log_file, 'r')
 file_lines = content_variable.readlines()
 content_variable.close()
