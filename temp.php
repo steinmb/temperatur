@@ -15,6 +15,7 @@ function getSensors() {
             $sensors[] = $entry;
         }
     }
+
     return $sensors;
 }
 
@@ -25,6 +26,7 @@ function getStreams(array $sensors) {
     foreach($sensors as $sensor) {
         $streams[] = fopen($baseDirectory . '/' . $sensor . '/' . $slaveFile, 'r');
     }
+
     return $streams;
 }
 
