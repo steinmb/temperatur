@@ -32,36 +32,40 @@ function getStreams(array $sensors) {
 
 function readSensors(array $streams) {
     if (!$streams) {
-        print "No streams, giving up. \n";
         return FALSE;
     }
     
     $average = FALSE;
-    $fileName = 'temp.log';
     $logString = '';
     $temps = '';
-    print (date('Y-m-d H:i:s') . "\n");
-    foreach($streams as $stream) {
+    print date('Y-m-d H:i:s');
+    foreach($streams as $key => $stream) {
         $raw = '';
         $raw = stream_get_contents($stream, -1);
         $temp = strstr($raw, 't=');
         $temp = trim($temp, "t=");
         $temp = number_format($temp/1000, 3);
-        print ($temp . "ºC\n");
-        if ($temps == '') {
+        print (' - Sensor' . $key . ' ' . $temp . 'ºC');
+
+        if ($temps) {
             $logString = date('Y-m-d H:i:s') . ', ';
             $logString .= $temp;
         }
         else {
-            $average = TRUE;
             $logString .= ', ' . $temp;
         }
+        
         $temps[] = $temp;
     }
-    if ($average) {
-        print ("Average: " . array_sum($temps)/2 . "ºC \n");
-    }
+
     $logString .= "\r\n";
+    print "\n";
+
+    return $logString;
+}
+
+function writeLogFile($logString) {
+    $fileName = 'temp.log'; 
     $logFile = fopen($fileName, 'a');
     fwrite($logFile, $logString);
     fclose($logFile);
@@ -81,16 +85,21 @@ function closeStreams(array $streams) {
 
 $end = FALSE;
 $endTime = strtotime("+2 week");
-// $endTime = strtotime("+10 second");
 
 while (!$end) {
     $sensors = getSensors();
     $streams = getStreams($sensors);
-    readSensors($streams);
-    if (time() > $endTime) {
-        $end = TRUE;
+    $logString = readSensors($streams);
+    if ($logString) {
+        writeLogFile($logString);
+        if (time() > $endTime) {
+            $end = TRUE;
+        }
+        sleep(60);
     }
-    sleep(60);
+    else {
+        print "No streams, giving up. \n";
+    }
 }
 
 if ($end) {
