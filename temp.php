@@ -55,27 +55,23 @@ function readSensors(array $streams) {
     }
     
     $logString = '';
-    $temps = '';
-    print date('Y-m-d H:i:s');
+
     foreach($streams as $key => $stream) {
         $raw = '';
         $raw = stream_get_contents($stream, -1);
         $temp = strstr($raw, 't=');
         $temp = trim($temp, "t=");
         $temp = number_format($temp/1000, 3);
-        print (' - Sensor' . $key . ' ' . $temp . 'ºC');
-
-        if ($temps) {
-            $logString = date('Y-m-d H:i:s') . ', ';
-            $logString .= $temp;
+        if ($key == 0) {
+            $logString = date('Y-m-d H:i:s') . ', ' . $temp;
+            print date('Y-m-d H:i:s');
+            print (' - Sensor' . $key . ' ' . $temp . 'ºC');
         }
         else {
             $logString .= ', ' . $temp;
+            print (' - Sensor' . $key . ' ' . $temp . 'ºC');
         }
-        
-        $temps[] = $temp;
     }
-
     $logString .= "\r\n";
     print "\n";
 
