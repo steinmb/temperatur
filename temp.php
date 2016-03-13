@@ -2,10 +2,18 @@
 
 /**
  * @file
- * Read data from DS18x20 one wire digital thermometer.
+ *
+ * Read data from DS18x20 one wire digital thermometer and write data to log file.
  */
 
+/**
+ * Scan one wire bus for attached sensors.
+ *
+ * @return array $sensors of sensors found.
+ */
 function getSensors() {
+    $sensors = array();
+
     echo exec('sudo modprobe w1-gpio');
     echo exec('sudo modprobe w1-therm');
     $baseDirectory = '/sys/bus/w1/devices';
@@ -19,7 +27,12 @@ function getSensors() {
     return $sensors;
 }
 
-
+/**
+ * Create data file pointers to attached sensors.
+ *
+ * @param array $sensors
+ * @return array
+ */
 function getStreams(array $sensors) {
     $slaveFile = 'w1_slave';
     $baseDirectory = '/sys/bus/w1/devices';
@@ -30,12 +43,17 @@ function getStreams(array $sensors) {
     return $streams;
 }
 
+/**
+ * Read data from attached sensors.
+ *
+ * @param array $streams
+ * @return bool|string. Return false if no data if no streams.
+ */
 function readSensors(array $streams) {
     if (!$streams) {
         return FALSE;
     }
     
-    $average = FALSE;
     $logString = '';
     $temps = '';
     print date('Y-m-d H:i:s');
@@ -64,6 +82,11 @@ function readSensors(array $streams) {
     return $logString;
 }
 
+/**
+ * Write data from sensors to log file.
+ *
+ * @param $logString
+ */
 function writeLogFile($logString) {
     $fileName = 'temp.log'; 
     $logFile = fopen($fileName, 'a');
@@ -72,7 +95,7 @@ function writeLogFile($logString) {
 }
 
 /**
- * Close stream.
+ * Close all attached sensors.
  */
 function closeStreams(array $streams) {
     if ($streams) {
@@ -105,4 +128,3 @@ while (!$end) {
 if ($end) {
     closeStreams($streams);
 }
-
